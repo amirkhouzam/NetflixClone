@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="Searchcell" id="gTV-IL-0wX" customClass="Searchcell" customModule="Netflix" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="345" height="229"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                <rect key="frame" x="0.0" y="0.0" width="345" height="229"/>
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                <subviews>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AbW-Q0-zvs">
+                        <rect key="frame" x="34.5" y="126.5" width="276" height="20.5"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="WXd-Ys-Z4U">
+                        <rect key="frame" x="0.0" y="0.0" width="345" height="229"/>
+                    </imageView>
+                </subviews>
+            </view>
+            <viewLayoutGuide key="safeArea" id="ZTg-uK-7eu"/>
+            <constraints>
+                <constraint firstItem="AbW-Q0-zvs" firstAttribute="centerX" secondItem="ZTg-uK-7eu" secondAttribute="centerX" id="0vr-lY-Bfh"/>
+                <constraint firstItem="AbW-Q0-zvs" firstAttribute="width" secondItem="gTV-IL-0wX" secondAttribute="width" multiplier="0.8" id="2Ru-lU-max"/>
+                <constraint firstItem="WXd-Ys-Z4U" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" id="BAI-cv-x6j"/>
+                <constraint firstItem="WXd-Ys-Z4U" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="UDs-ZM-grB"/>
+                <constraint firstAttribute="trailing" secondItem="WXd-Ys-Z4U" secondAttribute="trailing" id="awq-zZ-4FH"/>
+                <constraint firstItem="AbW-Q0-zvs" firstAttribute="centerY" secondItem="ZTg-uK-7eu" secondAttribute="centerY" id="jpq-LP-Muq"/>
+                <constraint firstAttribute="bottom" secondItem="WXd-Ys-Z4U" secondAttribute="bottom" id="nQx-9h-wsU"/>
+            </constraints>
+            <size key="customSize" width="345" height="229"/>
+            <connections>
+                <outlet property="filmimg" destination="WXd-Ys-Z4U" id="2JO-B4-ahB"/>
+                <outlet property="filmlbl" destination="AbW-Q0-zvs" id="eFC-UG-mLs"/>
+            </connections>
+            <point key="canvasLocation" x="118.11594202898551" y="172.43303571428569"/>
+        </collectionViewCell>
+    </objects>
+</document>
