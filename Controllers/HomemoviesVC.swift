@@ -85,13 +85,15 @@ extension HomemoviesVC : UITableViewDelegate , UITableViewDataSource {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "TCell" , for: indexPath) as! TCell
         
-        Apicaller.shared.call_populars(table: TBView) { check, res in
-            
-            /// Moving Data To The Cell
-            
-            cell.datapopular = res
-            
-        }
+        
+            Apicaller.shared.call_populars(table: TBView) { check, res in
+                
+                /// Moving Data To The Cell
+                
+                cell.datapopular = res
+                
+            }
+        
         
         return cell
         

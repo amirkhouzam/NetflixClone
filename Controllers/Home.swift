@@ -6,6 +6,8 @@
 //
 
 import UIKit
+import CoreData
+import Alamofire
 
 class Home: UIViewController {
     
@@ -22,7 +24,8 @@ class Home: UIViewController {
         setbarbutton()
         PGControl.pageIndicatorTintColor = .gray
         PGControl.currentPageIndicatorTintColor = .red
-
+        //deletealldata()
+       
     }
     //MARK: - Constants
     
@@ -112,6 +115,10 @@ extension Home : UICollectionViewDelegate , UICollectionViewDataSource ,UICollec
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         
         return 0
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: width, height: height)
     }
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {

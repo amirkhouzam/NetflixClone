@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="MyWatchlistcell" id="gTV-IL-0wX" customClass="MyWatchlistcell" customModule="Netflix" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="180" height="276"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                <rect key="frame" x="0.0" y="0.0" width="180" height="276"/>
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                <subviews>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sxX-QB-riq">
+                        <rect key="frame" x="10" y="149.5" width="160" height="21.5"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="m0a-8G-yb4">
+                        <rect key="frame" x="0.0" y="0.0" width="180" height="276"/>
+                    </imageView>
+                </subviews>
+            </view>
+            <viewLayoutGuide key="safeArea" id="ZTg-uK-7eu"/>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="m0a-8G-yb4" secondAttribute="trailing" id="0Ej-Mt-AkV"/>
+                <constraint firstItem="sxX-QB-riq" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="10" id="HAl-g0-fzE"/>
+                <constraint firstAttribute="bottom" secondItem="m0a-8G-yb4" secondAttribute="bottom" id="V47-Z0-J9R"/>
+                <constraint firstItem="sxX-QB-riq" firstAttribute="centerY" secondItem="ZTg-uK-7eu" secondAttribute="centerY" id="YBH-ff-UB0"/>
+                <constraint firstItem="m0a-8G-yb4" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" id="ZiP-6S-az2"/>
+                <constraint firstAttribute="trailing" secondItem="sxX-QB-riq" secondAttribute="trailing" constant="10" id="d1M-tG-bVc"/>
+                <constraint firstItem="m0a-8G-yb4" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="fXB-Sw-NVb"/>
+            </constraints>
+            <size key="customSize" width="180" height="276"/>
+            <connections>
+                <outlet property="filmimage" destination="m0a-8G-yb4" id="AMS-AK-HXH"/>
+                <outlet property="filmname" destination="sxX-QB-riq" id="Yip-Qh-Svj"/>
+            </connections>
+            <point key="canvasLocation" x="226.08695652173915" y="188.16964285714286"/>
+        </collectionViewCell>
+    </objects>
+</document>

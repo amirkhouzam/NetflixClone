@@ -86,7 +86,7 @@ class Searchcontroller: UIViewController  , UISearchBarDelegate{
 
 extension Searchcontroller : UICollectionViewDelegate , UICollectionViewDelegateFlowLayout , UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return model?.results.count ?? 5
+        return model?.results.count ?? 0
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {

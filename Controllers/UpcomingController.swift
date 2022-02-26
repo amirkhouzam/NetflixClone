@@ -121,34 +121,40 @@ extension UpcomingController : UITableViewDelegate , UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         
-        let Savemovie = UIContextualAction(style: .normal, title: "Add To Watchlist") { action, view, completion  in
-            let object = NSEntityDescription.insertNewObject(forEntityName: "Film", into: context) as! Film
-            let movie = self.data?.results[indexPath.row]
+        let Savemovie = UIContextualAction(style: .normal, title: "Add To Watchlist") { action, view,completion  in
             
-            object.name = movie?.original_title
-            object.urlimage = movie?.poster_path
-            object.overview = movie?.overview
+            let film = self.data?.results[indexPath.row]
             
-            context.insert(object)
-            
-            do{
-                try context.save()
-                let alert = UIAlertController(title: "Congrats", message: "Data Saved", preferredStyle: .alert)
-                let alertaction = UIAlertAction(title: "Done", style: .default, handler: nil)
-                alert.addAction(alertaction)
-                self.present(alert, animated: true, completion: nil)
-                print("Data Saved")
-            }catch{
-                print(error.localizedDescription)
-                let alert = UIAlertController(title: "Error", message: "Cannot Add It To Your Watchlisr", preferredStyle: .alert)
-                let alertaction = UIAlertAction(title: "Dismiss", style: .default, handler: nil)
-                alert.addAction(alertaction)
-                self.present(alert, animated: true, completion: nil)
+            if let img = film?.poster_path{
                 
+                let object = NSEntityDescription.insertNewObject(forEntityName: "Film", into: context) as! Film
+                
+                object.name = film?.original_title
+                object.overview = film?.overview
+                print(img)
+                getImage("https://image.tmdb.org/t/p/w500\(img)") { imgs in
+                    
+                    let imgstring = imagetostring(image: imgs!)
+                    object.urlimage = imgstring
+                    
+                }
+                
+                context.insert(object)
+                do{
+                    try context.save()
+                    
+                }catch{
+                    
+                        let alert = UIAlertController(title: "Error", message: "Cannot Add It To Your Watchlist", preferredStyle: .alert)
+                        let alertaction = UIAlertAction(title: "Dismiss", style: .default, handler: nil)
+                        alert.addAction(alertaction)
+                        self.present(alert, animated: true, completion: nil)
+                }
                 
             }
             
         }
+        
         let swipe = UISwipeActionsConfiguration(actions: [Savemovie])
         
         return swipe

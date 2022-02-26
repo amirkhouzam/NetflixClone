@@ -23,6 +23,11 @@ class TCell: UITableViewCell {
             Collectionmovies.reloadData()
         }
     }
+    var datalates : TrendingTitleResponse?{
+        didSet{
+            Collectionmovies.reloadData()
+        }
+    }
     static let identifier_name = "TCell"
     
     //MARK: - AwakeFromNib
@@ -73,7 +78,7 @@ extension TCell : UICollectionViewDelegate , UICollectionViewDataSource , UIColl
         ///Handling Img
         
         if let img = datapopular?.results[indexPath.row].poster_path {
-            
+
             let url = URL(string: "https://image.tmdb.org/t/p/w500\(img)")
             cell.filmimg.af.setImage(withURL: url!)
             cell.filmimg.contentMode = .scaleToFill

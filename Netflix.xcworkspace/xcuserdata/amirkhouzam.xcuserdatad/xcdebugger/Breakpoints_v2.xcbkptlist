@@ -44,8 +44,8 @@
             filePath = "View/filmcells/TCell.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "31"
-            endingLineNumber = "31"
+            startingLineNumber = "36"
+            endingLineNumber = "36"
             landmarkName = "awakeFromNib()"
             landmarkType = "7">
          </BreakpointContent>
@@ -60,8 +60,8 @@
             filePath = "View/filmcells/TCell.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "68"
-            endingLineNumber = "68"
+            startingLineNumber = "73"
+            endingLineNumber = "73"
             landmarkName = "collectionView(_:cellForItemAt:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -117,17 +117,141 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "D41F310C-B81B-4360-94D4-1C9E89D7D707"
-            shouldBeEnabled = "Yes"
+            uuid = "A2997C3C-45F6-4C97-BDBE-388A10E5159F"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Controllers/UpcomingController.swift"
+            filePath = "Controllers/MyWatchlist.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "140"
-            endingLineNumber = "140"
-            landmarkName = "tableView(_:trailingSwipeActionsConfigurationForRowAt:)"
+            startingLineNumber = "95"
+            endingLineNumber = "95"
+            landmarkName = "MyWatchlist"
+            landmarkType = "21">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "31C5F2AA-2089-44D6-9695-1E6AF49A80BD"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Controllers/MyWatchlist.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "17"
+            endingLineNumber = "17"
+            landmarkName = "viewDidLoad()"
             landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "BD4D6FD6-2D08-41D7-AD03-D4600BDCA034"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Controllers/MyWatchlist.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "15"
+            endingLineNumber = "15"
+            landmarkName = "MyWatchlist"
+            landmarkType = "3">
+            <Locations>
+               <Location
+                  uuid = "BD4D6FD6-2D08-41D7-AD03-D4600BDCA034 - 213c2b3a53536fa0"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Netflix.MyWatchlist.data.getter : Swift.Array&lt;Netflix.Film&gt;"
+                  moduleName = "Netflix"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/amirkhouzam/Desktop/simulator/Netflix/Controllers/MyWatchlist.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "15"
+                  endingLineNumber = "15"
+                  offsetFromSymbolStart = "90">
+               </Location>
+               <Location
+                  uuid = "BD4D6FD6-2D08-41D7-AD03-D4600BDCA034 - df7df4ceab91fa5c"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Netflix.MyWatchlist.data.setter : Swift.Array&lt;Netflix.Film&gt;"
+                  moduleName = "Netflix"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/amirkhouzam/Desktop/simulator/Netflix/Controllers/MyWatchlist.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "15"
+                  endingLineNumber = "15"
+                  offsetFromSymbolStart = "116">
+               </Location>
+               <Location
+                  uuid = "BD4D6FD6-2D08-41D7-AD03-D4600BDCA034 - b8f64456968dcd2"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Netflix.MyWatchlist.data.modify : Swift.Array&lt;Netflix.Film&gt;"
+                  moduleName = "Netflix"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/amirkhouzam/Desktop/simulator/Netflix/Controllers/MyWatchlist.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "0"
+                  endingLineNumber = "0"
+                  offsetFromSymbolStart = "27">
+               </Location>
+               <Location
+                  uuid = "BD4D6FD6-2D08-41D7-AD03-D4600BDCA034 - 5daba5cfaa99f75c"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Netflix.MyWatchlist.data.modify : Swift.Array&lt;Netflix.Film&gt; with unmangled suffix &quot;.resume.0&quot;"
+                  moduleName = "Netflix"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/amirkhouzam/Desktop/simulator/Netflix/Controllers/MyWatchlist.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "15"
+                  endingLineNumber = "15"
+                  offsetFromSymbolStart = "15">
+               </Location>
+               <Location
+                  uuid = "BD4D6FD6-2D08-41D7-AD03-D4600BDCA034 - e2672ea528e2620e"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Netflix.MyWatchlist.init(nibName: Swift.Optional&lt;Swift.String&gt;, bundle: Swift.Optional&lt;__C.NSBundle&gt;) -&gt; Netflix.MyWatchlist"
+                  moduleName = "Netflix"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/amirkhouzam/Desktop/simulator/Netflix/Controllers/MyWatchlist.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "15"
+                  endingLineNumber = "15"
+                  offsetFromSymbolStart = "210">
+               </Location>
+               <Location
+                  uuid = "BD4D6FD6-2D08-41D7-AD03-D4600BDCA034 - f9eebc6fe166da09"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Netflix.MyWatchlist.init(coder: __C.NSCoder) -&gt; Swift.Optional&lt;Netflix.MyWatchlist&gt;"
+                  moduleName = "Netflix"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/amirkhouzam/Desktop/simulator/Netflix/Controllers/MyWatchlist.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "15"
+                  endingLineNumber = "15"
+                  offsetFromSymbolStart = "167">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>
