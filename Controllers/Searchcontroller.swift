@@ -8,18 +8,13 @@
 import AlamofireImage
 import UIKit
 
-protocol delegatesendata {
-    
-    func sendata(title : filmpreviewmodel)
-    
-}
+
 
 class Searchcontroller: UIViewController  , UISearchBarDelegate{
     
     //MARK: - Constants
     
-    var model:TrendingTitleResponse?
-    var delegate : delegatesendata?
+    var data:TrendingTitleResponse?
     
     //MARK: - Outlets
     
@@ -52,7 +47,14 @@ class Searchcontroller: UIViewController  , UISearchBarDelegate{
         self.navigationItem.title = "Search"
         let textAttributes = [NSAttributedString.Key.foregroundColor:UIColor.white , NSAttributedString.Key.font : UIFont.boldSystemFont(ofSize: 20)]
         navigationController?.navigationBar.titleTextAttributes = textAttributes
-        
+        self.Collectionsearch.backgroundColor = .black
+        self.view.backgroundColor = .black
+        self.Searchbar.backgroundColor = .black
+        self.Searchbar.barTintColor = .black
+        self.Searchbar.barStyle = .black
+        self.Searchbar.tintColor = .white
+        self.Searchbar.scopeButtonTitles = ["Movies" , "TV"]
+        self.Searchbar.showsScopeBar = true
         /// Netflix logo
         
         let image = UIImage(named: "sss")
@@ -60,33 +62,45 @@ class Searchcontroller: UIViewController  , UISearchBarDelegate{
         imgview.image = image
         imgview.contentMode = .scaleToFill
         let btn = UIBarButtonItem(customView: imgview)
+        btn.target = self
+        btn.action = #selector(self.homescreen)
         self.navigationItem.leftBarButtonItem = btn
         let widthConstraint = imgview.widthAnchor.constraint(equalToConstant: 55)
         let heightConstraint = imgview.heightAnchor.constraint(equalToConstant: 120)
         widthConstraint.isActive = true
         heightConstraint.isActive = true
     }
-    
+    @objc func homescreen(){
+        self.tabBarController?.selectedIndex = 0
+    }
+  
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        
         ///Calling Data For Search Result
-        
-        Apicaller.shared.fetchdata(search: searchText) { check, res in
-            self.model = res
-            DispatchQueue.main.async {
-                self.Collectionsearch.reloadData()
+        if Searchbar.selectedScopeButtonIndex == 0{
+            
+            Apicaller.shared.fetchmovies(search: searchText) { res in
+                self.data = res
+                DispatchQueue.main.async {
+                    self.Collectionsearch.reloadData()
+                }
+            }
+        }else if searchBar.selectedScopeButtonIndex == 1 {
+            Apicaller.shared.fetchtvs(search: searchText) { res in
+                self.data = res
+                DispatchQueue.main.async {
+                    self.Collectionsearch.reloadData()
+                }
             }
         }
+        
+        
     }
-    
-    
 }
-
 //MARK: - Extension for Collectionview Delegate , Datasource And Scrolling Function
 
 extension Searchcontroller : UICollectionViewDelegate , UICollectionViewDelegateFlowLayout , UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return model?.results.count ?? 0
+        return data?.results.count ?? 0
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -95,14 +109,14 @@ extension Searchcontroller : UICollectionViewDelegate , UICollectionViewDelegate
         
         ///Handling Name
         
-        if let name = model?.results[indexPath.row].original_title{
+        if let name = data?.results[indexPath.row].original_title{
             
             cell.filmlbl.text = name
         }
         
         ///Handling img
         
-        if let img = model?.results[indexPath.row].poster_path {
+        if let img = data?.results[indexPath.row].poster_path {
             let url = URL(string: "https://image.tmdb.org/t/p/w500\(img)")
             cell.filmimg.af.setImage(withURL: url!)
         }
@@ -117,20 +131,24 @@ extension Searchcontroller : UICollectionViewDelegate , UICollectionViewDelegate
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         return 0
     }
-    
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        collectionView.deselectItem(at: indexPath, animated: true)
         
-        let title = model?.results[indexPath.row]
-        if let filmname = title?.original_title {
-            
-            let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "Selectedmovie") as! Selectedmovie
-            delegate?.sendata(title: filmpreviewmodel(title: filmname))
-            self.navigationController?.pushViewController(vc, animated: true)
+        let film = data?.results[indexPath.row]
+        let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "Selectedmovie") as! Selectedmovie
+        
+        vc.modalPresentationStyle = .fullScreen
+        self.present(vc, animated: true) {
+            vc.filmname.text = film?.original_title ?? film?.original_name
+            vc.Releaselbl.text = "Release date : \(film?.release_date ?? film?.first_air_date ?? "")"
+            vc.Ratelabel.text = "\(film?.vote_average ?? 0) / 10 ⭐️"
+            vc.filmdescription.text = film?.overview
+            guard let url = URL(string: imageurl+(film?.backdrop_path)!) else {return}
+            vc.filmimage.af.setImage(withURL: url)
+            vc.filmimage.contentMode = .scaleAspectFill
         }
-       
         
     }
+    
 }
 
 

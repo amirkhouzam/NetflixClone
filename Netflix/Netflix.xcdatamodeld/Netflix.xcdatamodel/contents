@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="19574" systemVersion="21C52" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="Film" representedClassName="Film" syncable="YES" codeGenerationType="class">
+        <attribute name="backimage" optional="YES" attributeType="String"/>
         <attribute name="name" optional="YES" attributeType="String"/>
+        <attribute name="onairdate" optional="YES" attributeType="String"/>
         <attribute name="overview" optional="YES" attributeType="String"/>
-        <attribute name="urlimage" optional="YES" attributeType="String"/>
+        <attribute name="posterimage" optional="YES" attributeType="String"/>
+        <attribute name="releasedate" optional="YES" attributeType="String"/>
+        <attribute name="voteaverage" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+    </entity>
+    <entity name="Login" representedClassName="Login" syncable="YES" codeGenerationType="class">
+        <attribute name="accesstoken" optional="YES" attributeType="String"/>
     </entity>
     <elements>
-        <element name="Film" positionX="-63" positionY="-18" width="128" height="74"/>
+        <element name="Film" positionX="-63" positionY="-18" width="128" height="134"/>
+        <element name="Login" positionX="-63" positionY="36" width="128" height="44"/>
     </elements>
 </model>

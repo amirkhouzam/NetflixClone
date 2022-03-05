@@ -17,13 +17,8 @@ class TCell: UITableViewCell {
     @IBOutlet weak var Collectionmovies: UICollectionView!
     
     //MARK: - Constants
-    
-    var datapopular : TrendingTitleResponse?{
-        didSet{
-            Collectionmovies.reloadData()
-        }
-    }
-    var datalates : TrendingTitleResponse?{
+    var container : UIViewController?
+    var data : TrendingTitleResponse?{
         didSet{
             Collectionmovies.reloadData()
         }
@@ -53,6 +48,8 @@ class TCell: UITableViewCell {
         self.Collectionmovies.delegate = self
         self.Collectionmovies.dataSource = self
         Collectionmovies.register(UINib(nibName: "CCell", bundle: nil), forCellWithReuseIdentifier: "CCell")
+        
+        self.Collectionmovies.backgroundColor = .black
     }
     
 }
@@ -62,7 +59,7 @@ class TCell: UITableViewCell {
 extension TCell : UICollectionViewDelegate , UICollectionViewDataSource , UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         
-        return datapopular?.results.count ?? 2
+        return data?.results.count ?? 2
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -70,14 +67,11 @@ extension TCell : UICollectionViewDelegate , UICollectionViewDataSource , UIColl
         
         ///Handling Name
         
-        if let name = datapopular?.results[indexPath.row].original_title {
-            
-            cell.namelbl.text = name
-        }
+        cell.namelbl.text = data?.results[indexPath.row].original_name ?? data?.results[indexPath.row].original_title
         
         ///Handling Img
         
-        if let img = datapopular?.results[indexPath.row].poster_path {
+        if let img = data?.results[indexPath.row].poster_path {
 
             let url = URL(string: "https://image.tmdb.org/t/p/w500\(img)")
             cell.filmimg.af.setImage(withURL: url!)
@@ -90,6 +84,27 @@ extension TCell : UICollectionViewDelegate , UICollectionViewDataSource , UIColl
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         
         return CGSize(width: width / 4, height: height / 5)
+    }
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        Collectionmovies.deselectItem(at: indexPath, animated: true)
+        
+        let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "Selectedmovie") as! Selectedmovie
+        
+        guard let contaner = container else {return}
+        guard let film = data?.results[indexPath.row] else {return}
+        guard let test = film.backdrop_path else {return}
+        guard let url = URL(string: imageurl+test) else {return}
+        vc.modalPresentationStyle = .fullScreen
+        contaner.present(vc, animated: true) {
+            vc.filmname.text = film.original_title ?? film.original_name
+            vc.filmdescription.text = film.overview
+            vc.Ratelabel.text = "\(film.vote_average) / 10 ⭐️"
+            vc.Releaselbl.text = "Release date : \(film.release_date ?? film.first_air_date ?? "")"
+            vc.filmimage.af.setImage(withURL: url)
+            vc.filmimage.contentMode = .scaleAspectFill
+        }
+        
+        
     }
 
 }

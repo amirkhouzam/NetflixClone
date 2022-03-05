@@ -46,6 +46,8 @@ class UpcomingController: UIViewController {
         self.navigationItem.title = "Upcoming Movies"
         let textAttributes = [NSAttributedString.Key.foregroundColor:UIColor.white , NSAttributedString.Key.font : UIFont.boldSystemFont(ofSize: 20)]
         navigationController?.navigationBar.titleTextAttributes = textAttributes
+        self.TBView.backgroundColor = .black
+        self.view.backgroundColor = .black
         
         /// Netflix logo
         
@@ -54,29 +56,25 @@ class UpcomingController: UIViewController {
         imgview.image = image
         imgview.contentMode = .scaleToFill
         let btn = UIBarButtonItem(customView: imgview)
+        btn.target = self
+        btn.action = #selector(self.homescreen)
         self.navigationItem.leftBarButtonItem = btn
         let widthConstraint = imgview.widthAnchor.constraint(equalToConstant: 55)
         let heightConstraint = imgview.heightAnchor.constraint(equalToConstant: 120)
         widthConstraint.isActive = true
         heightConstraint.isActive = true
         
-        /// profile image
-        
-        let imageview = UIImageView(frame: CGRect(x: 350, y: 0, width: 45, height: 45))
-        let img = UIImage(named: "user-48")
-        imageview.image = img
-        imageview.contentMode = .scaleToFill
-        let secondbtn = UIBarButtonItem(customView: imageview)
-        self.navigationItem.rightBarButtonItem = secondbtn
-        
         ///Fetching data
         
-        Apicaller.shared.call_upcoming(table: TBView) { check, res in
+        Apicaller.shared.call_upcoming(table: TBView) {  res in
             
             self.data = res
             
         }
        
+    }
+    @objc func homescreen(){
+        self.tabBarController?.selectedIndex = 0
     }
 
 }
@@ -124,19 +122,25 @@ extension UpcomingController : UITableViewDelegate , UITableViewDataSource {
         let Savemovie = UIContextualAction(style: .normal, title: "Add To Watchlist") { action, view,completion  in
             
             let film = self.data?.results[indexPath.row]
-            
+            guard let backimage = film?.backdrop_path else {return}
             if let img = film?.poster_path{
                 
                 let object = NSEntityDescription.insertNewObject(forEntityName: "Film", into: context) as! Film
                 
-                object.name = film?.original_title
+                object.name = film?.original_title ?? film?.original_name
                 object.overview = film?.overview
-                print(img)
+                object.releasedate = film?.release_date ?? film?.first_air_date
+                object.voteaverage = film?.vote_average ?? 0
                 getImage("https://image.tmdb.org/t/p/w500\(img)") { imgs in
                     
-                    let imgstring = imagetostring(image: imgs!)
-                    object.urlimage = imgstring
+                    let firstimage = imagetostring(image: imgs!)
                     
+                    object.posterimage = firstimage
+                }
+                getImage(imageurl+backimage) { image in
+                    guard let handle = image else {return}
+                    let secondimage = imagetostring(image: handle)
+                    object.backimage = secondimage
                 }
                 
                 context.insert(object)
@@ -160,17 +164,24 @@ extension UpcomingController : UITableViewDelegate , UITableViewDataSource {
         return swipe
         
     }
-    
-    func scrollViewWillBeginDecelerating(_ scrollView: UIScrollView) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
         
-        UIView.animate(withDuration: 0.5) {
-            if scrollView.panGestureRecognizer.translation(in: scrollView).y < 0{
-                self.navigationController?.navigationBar.alpha = 0.0
-            }else{
-                self.navigationController?.navigationBar.alpha = 1
-            }
+        let film = data?.results[indexPath.row]
+        
+        let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "Selectedmovie") as! Selectedmovie
+        
+        vc.modalPresentationStyle = .fullScreen
+        self.present(vc, animated: true) {
+            vc.filmname.text = film?.original_title ?? film?.original_name ?? "Something went wrong"
+            vc.Releaselbl.text = "Release date : \(film?.release_date ?? "")"
+            vc.Ratelabel.text = "\(film?.vote_average ?? 0) / 10 ⭐️"
+            vc.filmdescription.text = film?.overview
+            guard let url = URL(string: imageurl+(film?.backdrop_path)!) else {return}
+            vc.filmimage.af.setImage(withURL: url)
+            vc.filmimage.contentMode = .scaleAspectFill
         }
+            
     }
-    //TODO Didselect movie
     
 }

@@ -25,7 +25,6 @@ class Home: UIViewController {
         PGControl.pageIndicatorTintColor = .gray
         PGControl.currentPageIndicatorTintColor = .red
         //deletealldata()
-       
     }
     //MARK: - Constants
     
@@ -41,7 +40,7 @@ class Home: UIViewController {
         let firstBTN = UIBarButtonItem(customView: PrivacyBTN)
         PrivacyBTN.addTarget(self, action: #selector(self.PrivacyBTNPRESSED), for: .touchUpInside)
         PrivacyBTN.setTitle("Privacy", for: .normal)
-        PrivacyBTN.titleLabel?.font = UIFont.systemFont(ofSize: 20, weight: .bold)
+        PrivacyBTN.titleLabel?.font = UIFont.systemFont(ofSize: 18, weight: .medium)
         PrivacyBTN.titleLabel?.textColor = .white
         
         ///Help Button
@@ -50,7 +49,7 @@ class Home: UIViewController {
         let SecondBtn = UIBarButtonItem(customView: HelpBTN)
         HelpBTN.addTarget(self, action: #selector(self.HelpBTNpressed), for: .touchUpInside)
         HelpBTN.setTitle("Help", for: .normal)
-        HelpBTN.titleLabel?.font = UIFont.systemFont(ofSize: 20, weight: .bold)
+        HelpBTN.titleLabel?.font = UIFont.systemFont(ofSize: 18, weight: .medium)
         HelpBTN.titleLabel?.textColor = .white
         self.navigationItem.rightBarButtonItems = [firstBTN , SecondBtn]
         
@@ -83,10 +82,18 @@ class Home: UIViewController {
         
     }
     @objc func PrivacyBTNPRESSED(){
-        
+        let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "Webview") as! Webview
+        self.present(vc, animated: true) {
+            let url = URL(string: "https://help.netflix.com/legal/privacy")
+            vc.webView.load(URLRequest(url: url!))
+        }
     }
     @objc func HelpBTNpressed(){
-        
+        let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "Webview") as! Webview
+        self.present(vc, animated: true) {
+            let url = URL(string: "https://help.netflix.com/en/")
+            vc.webView.load(URLRequest(url: url!))
+        }
     }
     
 }

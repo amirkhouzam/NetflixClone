@@ -27,10 +27,18 @@ class SignVC: UIViewController {
     //MARK: - IBActions
     
     @IBAction func Signinbtnpressed(_ sender: UIButton) {
+        if let name = Nametxt.text {
+            
+            let vcc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "tabbarVC") as! tabbarVC
+            let parameter = ["username":"amiir" , "password" : "amir1234"]
+            Apicaller.shared.postlogin(parameter: parameter) { res in
+                print(res)
+            }
+            vcc.modalPresentationStyle = .fullScreen
+            self.present(vcc, animated: true, completion: nil)
+            
+        }
         
-        let vcc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "tabbarVC") as! tabbarVC
-        vcc.modalPresentationStyle = .fullScreen
-        self.present(vcc, animated: true, completion: nil)
         
     }
     @IBAction func Recoverpassbtnpressed(_ sender: UIButton) {
@@ -92,7 +100,11 @@ class SignVC: UIViewController {
         self.navigationController?.popViewController(animated: true)
     }
     @objc func HelpBTNpressed(){
-        
+        let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "Webview") as! Webview
+        self.present(vc, animated: true) {
+            let url = URL(string: "https://help.netflix.com/en/")
+            vc.webView.load(URLRequest(url: url!))
+        }
     }
     @objc func textdidchange(){
         

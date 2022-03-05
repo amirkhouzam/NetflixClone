@@ -12,7 +12,7 @@ class MyWatchlist: UIViewController {
     
     @IBOutlet weak var CollectionWatchlist: UICollectionView!
     var countdata : Int?
-    var data : [Film] = []
+    var data : [Film]?
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -27,7 +27,7 @@ class MyWatchlist: UIViewController {
     }
     func setupui(){
         
-        /// Setup navigation bar
+        /// Setup navigation barπ
         
         self.navigationController?.navigationBar.isTranslucent = false
         self.navigationController?.navigationBar.barTintColor = .clear
@@ -43,6 +43,8 @@ class MyWatchlist: UIViewController {
         self.navigationItem.title = "My Watchlist"
         let textAttributes = [NSAttributedString.Key.foregroundColor:UIColor.white , NSAttributedString.Key.font : UIFont.boldSystemFont(ofSize: 20)]
         navigationController?.navigationBar.titleTextAttributes = textAttributes
+        self.CollectionWatchlist.backgroundColor = .black
+        
         
         /// Netflix logo
         
@@ -51,20 +53,48 @@ class MyWatchlist: UIViewController {
         imgview.image = image
         imgview.contentMode = .scaleToFill
         let btn = UIBarButtonItem(customView: imgview)
+        btn.target = self
+        btn.action = #selector(self.homescreen)
         self.navigationItem.leftBarButtonItem = btn
         let widthConstraint = imgview.widthAnchor.constraint(equalToConstant: 55)
         let heightConstraint = imgview.heightAnchor.constraint(equalToConstant: 120)
         widthConstraint.isActive = true
         heightConstraint.isActive = true
         
-        /// profile image
+        ///Delete All btn
         
-        let imageview = UIImageView(frame: CGRect(x: 350, y: 0, width: 45, height: 45))
-        let img = UIImage(named: "user-48")
-        imageview.image = img
-        imageview.contentMode = .scaleToFill
-        let secondbtn = UIBarButtonItem(customView: imageview)
-        self.navigationItem.rightBarButtonItem = secondbtn
+        let Deletebtn = UIButton(frame: CGRect(x: 220, y: -10, width: 50, height: 50))
+        let firstBTN = UIBarButtonItem(customView: Deletebtn)
+        Deletebtn.addTarget(self, action: #selector(self.Deleteall), for: .touchUpInside)
+        Deletebtn.setTitle("Delete All", for: .normal)
+        Deletebtn.titleLabel?.font = UIFont.systemFont(ofSize: 18, weight: .medium)
+        Deletebtn.titleLabel?.textColor = .white
+        self.navigationItem.rightBarButtonItem = firstBTN
+        
+    }
+    @objc func homescreen(){
+        self.tabBarController?.selectedIndex = 0
+    }
+    
+    @objc func Deleteall(){
+        
+        //deletealldata(collection: CollectionWatchlist)
+        let fetch : NSFetchRequest = Film.fetchRequest()
+        do{
+            let result = try context.fetch(fetch)
+            for res in result {
+                context.delete(res)
+                
+                print("all data deleted")
+            }
+            try context.save()
+           // data?.removeAll()
+            DispatchQueue.main.async {
+                self.CollectionWatchlist.reloadData()
+            }
+        }catch{
+            print(error.localizedDescription)
+        }
     }
     func getcount(){
         
@@ -102,15 +132,12 @@ extension MyWatchlist : UICollectionViewDelegate , UICollectionViewDelegateFlowL
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MyWatchlistcell", for: indexPath) as! MyWatchlistcell
         
-        if let url = data[indexPath.row].urlimage{
-            stringtoimage(encodedimage: url) { image in
-                cell.filmimage.contentMode = .scaleToFill
-                cell.filmimage.image = image
-                
-            }
+        guard let filmss = data else {return UICollectionViewCell()}
+        cell.filmname.text = filmss[indexPath.row].name
+        stringtoimage(encodedimage: filmss[indexPath.row].posterimage ?? "") { image in
+            cell.filmimage.contentMode = .scaleAspectFill
+            cell.filmimage.image = image
         }
-            cell.filmname.text = data[indexPath.row].name
-        
         return cell
         
     }
@@ -120,14 +147,25 @@ extension MyWatchlist : UICollectionViewDelegate , UICollectionViewDelegateFlowL
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         return 10
     }
-    func scrollViewWillBeginDecelerating(_ scrollView: UIScrollView) {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
-        UIView.animate(withDuration: 0.5) {
-            if scrollView.panGestureRecognizer.translation(in: scrollView).y < 0{
-                self.navigationController?.navigationBar.alpha = 0.0
-            }else{
-                self.navigationController?.navigationBar.alpha = 1
+        let film = data?[indexPath.row]
+        let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "Selectedmovie") as! Selectedmovie
+        
+        vc.modalPresentationStyle = .fullScreen
+        
+        self.present(vc, animated: true) {
+            
+            vc.Releaselbl.text = "Release date : \( film?.releasedate ?? "")"
+            vc.Ratelabel.text = "\(film?.voteaverage ?? 0) / 10 ⭐️"
+            vc.filmname.text = film?.name
+            vc.filmdescription.text = film?.overview
+            stringtoimage(encodedimage: film?.backimage ?? "") { image in
+                vc.filmimage.contentMode = .scaleAspectFill
+                vc.filmimage.image = image
             }
         }
+        
+        
     }
 }

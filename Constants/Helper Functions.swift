@@ -43,7 +43,7 @@ func getdataoffline(self : UIViewController , completion :@escaping([Film]?) -> 
     }
     
 }
-func deleteallofflinedata(){
+func deleteallofflinedata(collection : UICollectionView){
     
     let fetch : NSFetchRequest = Film.fetchRequest()
     do{
@@ -62,7 +62,7 @@ func insertdataoffline(self : UIViewController , filmname : String , filmimage :
     ///Checking if the data exists
     
     object.name = filmname
-    object.urlimage = imagetostring(image: filmimage)
+    object.posterimage = imagetostring(image: filmimage)
     object.overview = filmoverview
     context.insert(object)
     
@@ -78,7 +78,7 @@ func insertdataoffline(self : UIViewController , filmname : String , filmimage :
     }
     
 }
-func deletealldata(){
+func deletealldata(collection : UICollectionView){
     
     
     let fetchRequest: NSFetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Film")
@@ -87,6 +87,9 @@ func deletealldata(){
     do {
         try context.execute(deleteRequest)
         try context.save()
+        DispatchQueue.main.async {
+            collection.reloadData()
+        }
     } catch {
         // TODO: handle the error
         print("all data deleted")
