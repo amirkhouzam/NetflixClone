@@ -14,6 +14,8 @@ class MyWatchlistcell: UICollectionViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
+        filmimage.backgroundColor = .clear
+        filmname.textColor = .white
     }
 
 }

@@ -12,6 +12,9 @@ class HomemoviesVC: UIViewController {
     //MARK: - Outlets
     
     @IBOutlet weak var TBView: UITableView!
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
     
     //MARK: - Constants
     var container : UIViewController?
@@ -129,16 +132,24 @@ extension HomemoviesVC : UITableViewDelegate , UITableViewDataSource {
         switch indexPath.section{
             
         case 0 : cell.data = popular
+            cell.tableviewsection = 0
         case 1 : cell.data = Trendingmovies
+            cell.tableviewsection = 1
         case 2 : cell.data = toprated
+            cell.tableviewsection = 2
         case 3 : cell.data = nowplaying
+            cell.tableviewsection = 3
         case 4 : cell.data = populartv
+            cell.tableviewsection = 4
         case 5 : cell.data = topratedtv
+            cell.tableviewsection = 5
         case 6 : cell.data = trendingtv
+            cell.tableviewsection = 6
             
         default:
             return UITableViewCell()
         }
+       
     
         
         
@@ -162,7 +173,7 @@ extension HomemoviesVC : UITableViewDelegate , UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         
-        return height / 4
+        return CGFloat(height / 4)
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

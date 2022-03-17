@@ -23,6 +23,7 @@ class TCell: UITableViewCell {
             Collectionmovies.reloadData()
         }
     }
+    var tableviewsection : Int?
     static let identifier_name = "TCell"
     
     //MARK: - AwakeFromNib
@@ -88,23 +89,54 @@ extension TCell : UICollectionViewDelegate , UICollectionViewDataSource , UIColl
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         Collectionmovies.deselectItem(at: indexPath, animated: true)
         
-        let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "Selectedmovie") as! Selectedmovie
+        let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "MovieController") as! MovieController
         
+        guard let section = tableviewsection else {return}
         guard let contaner = container else {return}
         guard let film = data?.results[indexPath.row] else {return}
-        guard let test = film.backdrop_path else {return}
-        guard let url = URL(string: imageurl+test) else {return}
         vc.modalPresentationStyle = .fullScreen
         contaner.present(vc, animated: true) {
+            
+            /// Showing data in labels
+            
             vc.filmname.text = film.original_title ?? film.original_name
             vc.filmdescription.text = film.overview
             vc.Ratelabel.text = "\(film.vote_average) / 10 ⭐️"
             vc.Releaselbl.text = "Release date : \(film.release_date ?? film.first_air_date ?? "")"
-            vc.filmimage.af.setImage(withURL: url)
-            vc.filmimage.contentMode = .scaleAspectFill
+            vc.core_data = film
+            /// Checking if the movie is saved
+            
+            let check = coredatacaller.shared.checkexist(filmname: film.original_title ?? film.original_name ?? "")
+            switch check{
+            case true:vc.savemoviebtnoutlet.setImage(UIImage(systemName:"heart.fill"), for: .normal)
+            case false:vc.savemoviebtnoutlet.setImage(UIImage(systemName: "heart"), for: .normal)
+                
+            }
+            
+            /// Showing the trailer
+            
+            Apicaller.shared.getvideoid(query: "\(film.original_title ?? film.original_name ?? "") official trailer") { response in
+                guard let id = response?.items[0].id.videoId else {return}
+                
+                vc.youtube.load(URLRequest(url: URL(string: "https://www.youtube.com/embed/\(id)")!))
+            }
+            
+            /// Checking movie or tv to call the recommended
+            
+            switch section {
+            case 0...3 : Apicaller.shared.getrecomendedmovie(movieid: film.id) { res in
+                vc.result = res
+                vc.Ismovie = true
+            }
+            case 4...6 : Apicaller.shared.getrecomendedtv(tvid: film.id) { res in
+                vc.result = res
+                vc.Ismovie = false
+            }
+            default:
+                break;
+            }
+            
         }
-        
-        
     }
 
 }

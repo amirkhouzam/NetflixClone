@@ -24,11 +24,14 @@ class Home: UIViewController {
         setbarbutton()
         PGControl.pageIndicatorTintColor = .gray
         PGControl.currentPageIndicatorTintColor = .red
-        //deletealldata()
+
     }
     //MARK: - Constants
     
     let imagess = [UIImage(named: "net 1"),UIImage(named: "net 3"),UIImage(named: "net 2"),UIImage(named: "net 4")]
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
     
     //MARK: - Functions
     
@@ -64,7 +67,6 @@ class Home: UIViewController {
         widthConstraint.isActive = true
         heightConstraint.isActive = true
         self.navigationItem.leftBarButtonItem = thirdbtn
-       
         
         ///register nib
         
@@ -78,7 +80,6 @@ class Home: UIViewController {
         let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "SignVC") as! SignVC
         
         self.navigationController?.pushViewController(vc, animated: true)
-        self.navigationController?.modalPresentationStyle = .fullScreen
         
     }
     @objc func PrivacyBTNPRESSED(){

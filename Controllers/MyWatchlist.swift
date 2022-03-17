@@ -11,6 +11,10 @@ import CoreData
 class MyWatchlist: UIViewController {
     
     @IBOutlet weak var CollectionWatchlist: UICollectionView!
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
+    var ismovie : Bool?
     var countdata : Int?
     var data : [Film]?
     override func viewDidLoad() {
@@ -26,6 +30,8 @@ class MyWatchlist: UIViewController {
         getcount()
     }
     func setupui(){
+        
+        
         
         /// Setup navigation barπ
         
@@ -61,41 +67,12 @@ class MyWatchlist: UIViewController {
         widthConstraint.isActive = true
         heightConstraint.isActive = true
         
-        ///Delete All btn
-        
-        let Deletebtn = UIButton(frame: CGRect(x: 220, y: -10, width: 50, height: 50))
-        let firstBTN = UIBarButtonItem(customView: Deletebtn)
-        Deletebtn.addTarget(self, action: #selector(self.Deleteall), for: .touchUpInside)
-        Deletebtn.setTitle("Delete All", for: .normal)
-        Deletebtn.titleLabel?.font = UIFont.systemFont(ofSize: 18, weight: .medium)
-        Deletebtn.titleLabel?.textColor = .white
-        self.navigationItem.rightBarButtonItem = firstBTN
         
     }
     @objc func homescreen(){
         self.tabBarController?.selectedIndex = 0
     }
     
-    @objc func Deleteall(){
-        
-        //deletealldata(collection: CollectionWatchlist)
-        let fetch : NSFetchRequest = Film.fetchRequest()
-        do{
-            let result = try context.fetch(fetch)
-            for res in result {
-                context.delete(res)
-                
-                print("all data deleted")
-            }
-            try context.save()
-           // data?.removeAll()
-            DispatchQueue.main.async {
-                self.CollectionWatchlist.reloadData()
-            }
-        }catch{
-            print(error.localizedDescription)
-        }
-    }
     func getcount(){
         
         let predict:NSFetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Film")
@@ -112,8 +89,9 @@ class MyWatchlist: UIViewController {
     }
     func getdata(){
         
-        getdataoffline(self: self) { film in
+        coredatacaller.shared.getdataoffline(self: self) { film in
             self.data = film!
+            
             DispatchQueue.main.async {
                 self.CollectionWatchlist.reloadData()
             }
@@ -134,9 +112,11 @@ extension MyWatchlist : UICollectionViewDelegate , UICollectionViewDelegateFlowL
         
         guard let filmss = data else {return UICollectionViewCell()}
         cell.filmname.text = filmss[indexPath.row].name
-        stringtoimage(encodedimage: filmss[indexPath.row].posterimage ?? "") { image in
-            cell.filmimage.contentMode = .scaleAspectFill
-            cell.filmimage.image = image
+        if let image = filmss[indexPath.row].posterimage{
+            getImage(imageurl+image) { image in
+                
+                cell.filmimage.image = image
+            }
         }
         return cell
         
@@ -149,21 +129,32 @@ extension MyWatchlist : UICollectionViewDelegate , UICollectionViewDelegateFlowL
     }
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
-        let film = data?[indexPath.row]
-        let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "Selectedmovie") as! Selectedmovie
+        guard let film = data?[indexPath.row] else {return}
+        let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "MovieController") as! MovieController
         
         vc.modalPresentationStyle = .fullScreen
         
         self.present(vc, animated: true) {
             
-            vc.Releaselbl.text = "Release date : \( film?.releasedate ?? "")"
-            vc.Ratelabel.text = "\(film?.voteaverage ?? 0) / 10 ⭐️"
-            vc.filmname.text = film?.name
-            vc.filmdescription.text = film?.overview
-            stringtoimage(encodedimage: film?.backimage ?? "") { image in
-                vc.filmimage.contentMode = .scaleAspectFill
-                vc.filmimage.image = image
+            vc.Releaselbl.text = "Release date : \( film.releasedate ?? "")"
+            vc.Ratelabel.text = "\(film.voteaverage ) / 10 ⭐️"
+            vc.filmname.text = film.name
+            vc.filmdescription.text = film.overview
+            vc.savemoviebtnoutlet.setImage(UIImage(systemName: "heart.fill"), for: .normal)
+            Apicaller.shared.getvideoid(query: "\(film.name ?? "") official trailer") { response in
+                guard let id = response?.items.first?.id.videoId else {return}
+                
+                vc.youtube.load(URLRequest(url: URL(string: "https://www.youtube.com/embed/\(id)")!))
             }
+            switch film.ismovie {
+            case true : Apicaller.shared.getrecomendedmovie(movieid: Int(film.id)) { res in
+                vc.result = res
+            }
+            case false : Apicaller.shared.getrecomendedtv(tvid: Int(film.id)) { res in
+                vc.result = res
+            }
+            }
+            
         }
         
         

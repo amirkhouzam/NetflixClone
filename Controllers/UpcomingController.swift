@@ -18,6 +18,9 @@ class UpcomingController: UIViewController {
     //MARK: - Constants
     
     var data : TrendingTitleResponse?
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
     
     //MARK: - Viewdidload
     
@@ -102,9 +105,9 @@ extension UpcomingController : UITableViewDelegate , UITableViewDataSource {
         
         if let img = data?.results[indexPath.row].poster_path{
             
-            let url = URL(string: "https://image.tmdb.org/t/p/w500\(img)")
+            guard let url = URL(string: "https://image.tmdb.org/t/p/w500\(img)") else {return UITableViewCell()}
             
-            cell.filmimg.af_setImage(withURL: url!)
+            cell.filmimg.af.setImage(withURL: url)
             cell.filmimg.contentMode = .scaleToFill
         }
         
@@ -116,70 +119,46 @@ extension UpcomingController : UITableViewDelegate , UITableViewDataSource {
         
         return height / 5
     }
-    
-    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        
-        let Savemovie = UIContextualAction(style: .normal, title: "Add To Watchlist") { action, view,completion  in
-            
-            let film = self.data?.results[indexPath.row]
-            guard let backimage = film?.backdrop_path else {return}
-            if let img = film?.poster_path{
-                
-                let object = NSEntityDescription.insertNewObject(forEntityName: "Film", into: context) as! Film
-                
-                object.name = film?.original_title ?? film?.original_name
-                object.overview = film?.overview
-                object.releasedate = film?.release_date ?? film?.first_air_date
-                object.voteaverage = film?.vote_average ?? 0
-                getImage("https://image.tmdb.org/t/p/w500\(img)") { imgs in
-                    
-                    let firstimage = imagetostring(image: imgs!)
-                    
-                    object.posterimage = firstimage
-                }
-                getImage(imageurl+backimage) { image in
-                    guard let handle = image else {return}
-                    let secondimage = imagetostring(image: handle)
-                    object.backimage = secondimage
-                }
-                
-                context.insert(object)
-                do{
-                    try context.save()
-                    
-                }catch{
-                    
-                        let alert = UIAlertController(title: "Error", message: "Cannot Add It To Your Watchlist", preferredStyle: .alert)
-                        let alertaction = UIAlertAction(title: "Dismiss", style: .default, handler: nil)
-                        alert.addAction(alertaction)
-                        self.present(alert, animated: true, completion: nil)
-                }
-                
-            }
-            
-        }
-        
-        let swipe = UISwipeActionsConfiguration(actions: [Savemovie])
-        
-        return swipe
-        
-    }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         
-        let film = data?.results[indexPath.row]
+        guard let film = data?.results[indexPath.row] else {return}
         
-        let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "Selectedmovie") as! Selectedmovie
-        
+        let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "MovieController") as! MovieController
         vc.modalPresentationStyle = .fullScreen
         self.present(vc, animated: true) {
-            vc.filmname.text = film?.original_title ?? film?.original_name ?? "Something went wrong"
-            vc.Releaselbl.text = "Release date : \(film?.release_date ?? "")"
-            vc.Ratelabel.text = "\(film?.vote_average ?? 0) / 10 ⭐️"
-            vc.filmdescription.text = film?.overview
-            guard let url = URL(string: imageurl+(film?.backdrop_path)!) else {return}
-            vc.filmimage.af.setImage(withURL: url)
-            vc.filmimage.contentMode = .scaleAspectFill
+            
+            /// Showing data in labels
+            
+            vc.filmname.text = film.original_title ?? film.original_name ?? "Something went wrong"
+            vc.Releaselbl.text = "Release date : \(film.release_date ?? "")"
+            vc.Ratelabel.text = "\(film.vote_average) / 10 ⭐️"
+            vc.filmdescription.text = film.overview
+            vc.core_data = film
+            
+            /// Checking if saved
+            
+            let check = coredatacaller.shared.checkexist(filmname: film.original_title ?? film.original_name)
+            switch check{
+            case true:vc.savemoviebtnoutlet.setImage(UIImage(systemName: "heart.fill"), for: .normal)
+            case false:vc.savemoviebtnoutlet.setImage(UIImage(systemName: "heart"), for: .normal)
+            }
+            
+            /// Showing trailer
+            
+            Apicaller.shared.getvideoid(query: "\(film.original_title ?? film.original_name ?? "") official trailer") { response in
+                guard let id = response?.items.first?.id.videoId else {return}
+                
+                vc.youtube.load(URLRequest(url: URL(string: "https://www.youtube.com/embed/\(id)")!))
+            }
+            
+            /// Calling api for collectionview
+            
+            Apicaller.shared.getrecomendedmovie(movieid: film.id) { res in
+                
+                vc.result = res
+                vc.Ismovie = true
+            }
         }
             
     }

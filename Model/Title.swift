@@ -23,5 +23,6 @@ struct Title: Codable {
     let vote_average: Double
     let backdrop_path: String?
     let first_air_date: String?
+    let video: Bool?
 }
 

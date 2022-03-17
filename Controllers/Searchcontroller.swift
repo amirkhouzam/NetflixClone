@@ -13,8 +13,11 @@ import UIKit
 class Searchcontroller: UIViewController  , UISearchBarDelegate{
     
     //MARK: - Constants
-    
+    var ismovie : Bool?
     var data:TrendingTitleResponse?
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
     
     //MARK: - Outlets
     
@@ -80,6 +83,7 @@ class Searchcontroller: UIViewController  , UISearchBarDelegate{
             
             Apicaller.shared.fetchmovies(search: searchText) { res in
                 self.data = res
+                self.ismovie = true
                 DispatchQueue.main.async {
                     self.Collectionsearch.reloadData()
                 }
@@ -87,6 +91,7 @@ class Searchcontroller: UIViewController  , UISearchBarDelegate{
         }else if searchBar.selectedScopeButtonIndex == 1 {
             Apicaller.shared.fetchtvs(search: searchText) { res in
                 self.data = res
+                self.ismovie = false
                 DispatchQueue.main.async {
                     self.Collectionsearch.reloadData()
                 }
@@ -133,18 +138,52 @@ extension Searchcontroller : UICollectionViewDelegate , UICollectionViewDelegate
     }
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
-        let film = data?.results[indexPath.row]
-        let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "Selectedmovie") as! Selectedmovie
+        guard let film = data?.results[indexPath.row] else {return}
+        let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "MovieController") as! MovieController
         
         vc.modalPresentationStyle = .fullScreen
         self.present(vc, animated: true) {
-            vc.filmname.text = film?.original_title ?? film?.original_name
-            vc.Releaselbl.text = "Release date : \(film?.release_date ?? film?.first_air_date ?? "")"
-            vc.Ratelabel.text = "\(film?.vote_average ?? 0) / 10 ⭐️"
-            vc.filmdescription.text = film?.overview
-            guard let url = URL(string: imageurl+(film?.backdrop_path)!) else {return}
-            vc.filmimage.af.setImage(withURL: url)
-            vc.filmimage.contentMode = .scaleAspectFill
+            
+            /// Showing data in labels
+            
+            vc.filmname.text = film.original_title ?? film.original_name
+            vc.Releaselbl.text = "Release date : \(film.release_date ?? film.first_air_date ?? "")"
+            vc.Ratelabel.text = "\(film.vote_average) / 10 ⭐️"
+            vc.filmdescription.text = film.overview
+            vc.core_data = film
+            
+            /// Checking if the movie is saved
+            
+            let check = coredatacaller.shared.checkexist(filmname: film.original_title ?? film.original_name ?? "")
+            switch check{
+            case true:vc.savemoviebtnoutlet.setImage(UIImage(systemName:"heart.fill"), for: .normal)
+            case false:vc.savemoviebtnoutlet.setImage(UIImage(systemName: "heart"), for: .normal)
+                
+            }
+            
+            /// Showing the trailer
+            
+            Apicaller.shared.getvideoid(query: "\(film.original_title ?? film.original_name ?? "") official trailer") { response in
+                guard let id = response?.items[0].id.videoId else {return}
+                
+                vc.youtube.load(URLRequest(url: URL(string: "https://www.youtube.com/embed/\(id)")!))
+            }
+            
+            /// Checking movie or tv to call the recommended
+            
+            switch self.ismovie {
+            case true : Apicaller.shared.getrecomendedmovie(movieid: film.id) { res in
+                vc.result = res
+                vc.Ismovie = true
+            }
+            case false : Apicaller.shared.getrecomendedtv(tvid: film.id) { res in
+                vc.result = res
+                vc.Ismovie = false
+            }
+            default:
+                break;
+            }
+            
         }
         
     }

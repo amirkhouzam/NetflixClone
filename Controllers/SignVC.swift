@@ -24,20 +24,19 @@ class SignVC: UIViewController {
     @IBOutlet weak var signoutlet: UIButton!
     @IBOutlet weak var errlbl: UILabel!
     
+    //MARK: - Constants
+    
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
+    
     //MARK: - IBActions
     
     @IBAction func Signinbtnpressed(_ sender: UIButton) {
-        if let name = Nametxt.text {
-            
-            let vcc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "tabbarVC") as! tabbarVC
-            let parameter = ["username":"amiir" , "password" : "amir1234"]
-            Apicaller.shared.postlogin(parameter: parameter) { res in
-                print(res)
-            }
-            vcc.modalPresentationStyle = .fullScreen
-            self.present(vcc, animated: true, completion: nil)
-            
-        }
+    
+        let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "tabbarVC") as! tabbarVC
+        vc.modalPresentationStyle = .fullScreen
+        self.present(vc, animated: true, completion: nil)
         
         
     }
